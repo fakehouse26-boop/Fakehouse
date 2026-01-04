@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BetKing – Apostas Esportivas & Cassino</title>
+<style>
+:root{--green:#00ff00;--black:#0a0a0a;--gray:#222}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{background:var(--black);color:#fff}
+a{color:var(--green);text-decoration:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem;background:#000;border-bottom:2px solid var(--green)}
+.logo{font-size:1.6rem;font-weight:700;color:var(--green)}
+nav a{margin-left:1rem}
+.user-info span{margin-left:.5rem}
+.banner{background:url(https://i.ibb.co/6y4n5wH/banner.jpg) center/cover no-repeat;height:240px;display:flex;align-items:center;justify-content:center;flex-direction:center;text-align:center}
+.banner h2{font-size:2.2rem;margin-bottom:.5rem}
+.btn{background:var(--green);color:#000;padding:.7rem 1.4rem;border:none;border-radius:4px;font-weight:700;cursor:pointer}
+main{display:flex;max-width:1200px;margin:1rem auto;gap:1rem}
+.col-esq{flex:1;background:var(--gray);padding:1rem;border-radius:6px}
+.col-dir{flex:3;background:var(--gray);padding:1rem;border-radius:6px}
+.esporte{border-bottom:1px solid #444;padding:.6rem 0;cursor:pointer}
+.esporte:hover{background:#333}
+.jogo{display:flex;justify-content:space-between;align-items:center;padding:.6rem;border-bottom:1px solid #444}
+.odds span{background:#000;padding:.4rem .6rem;margin:0 .2rem;border-radius:4px;cursor:pointer}
+.odds span:hover{background:var(--green);color:#000}
+.carrinho{position:fixed;bottom:0;right:0;width:320px;background:#000;border:2px solid var(--green);padding:1rem;max-height:50vh;overflow-y:auto}
+.item-carrinho{display:flex;justify-content:space-between;margin-bottom:.5rem}
+.casino-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.game-card{background:#111;padding:1rem;border-radius:6px;text-align:center}
+.game-card img{width:100%;height:100px;object-fit:cover;border-radius:4px}
+.roulette{position:relative;width:200px;height:200px;margin:1rem auto}
+.roulette-wheel{width:100%;height:100%;border-radius:50%;background:conic-gradient(red 0deg 45deg,#000 45deg 90deg,red 90deg 135deg,#000 135deg 180deg,red 180deg 225deg,#000 225deg 270deg,red 270deg 315deg,#000 315deg 360deg);animation: spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.crash-box{background:#000;padding:1rem;border-radius:6px;text-align:center}
+.crash-multi{fon-size:2rem;color:var(--green);margin:.5rem 0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">BetKing</div>
+  <nav>
+    <a href="#" onclick="mostrar('esportes')">Esportes</a>
+    <a href="#" onclick="mostrar('cassino')">Cassino</a>
+    <a href="#" onclick="mostrar('depositar')">Depositar</a>
+  </nav>
+  <div class="user-info">
+    <span id="saldoUser">0,00</span> BRL
+    <button class="btn" onclick="logout()">Sair</button>
+  </div>
+</header>
+
+<div class="banner">
+  <div>
+    <h2>BEM-VINDO À BETKING</h2>
+    <p>Odds ao-vivo, slots, roleta, crash – 24 h por dia</p>
+  </div>
+</div>
+
+<main>
+  <aside class="col-esq" id="menuLat">
+    <h3>Esportes</h3>
+    <div class="esporte" onclick="filtrar('futebol')">⚽ Futebol</div>
+    <div class="esporte" onclick="filtrar('basquete')">🏀 Basquete</div>
+    <div class="esporte" onclick="filtrar('tenis')">🎾 Tênis</div>
+  </aside>
+
+  <section class="col-dir" id="conteudo">
+    <!-- ESPORTES -->
+    <div id="secEsportes">
+      <h3>Futebol – Ao-Vivo & Hoje</h3>
+      <div id="jogos">
+        <!-- jogos inseridos via JS -->
+      </div>
+    </div>
+
+    <!-- CASSINO -->
+    <div id="secCassino" style="display:none">
+      <h3>Cassino</h3>
+      <div class="casino-grid">
+        <div class="game-card">
+          <img src="https://i.ibb.co/pwnYpQk/roleta.jpg" alt="Roleta">
+          <h4>Roleta Brasileira</h4>
+          <button class="btn" onclick="abrirRoleta()">Jogar</button>
+        </div>
+        <div class="game-card">
+          <img src="https://i.ibb.co/z5s7fVL/crash.jpg" alt="Crash">
+          <h4>Crash</h4>
+          <button class="btn" onclick="abrirCrash()">Jogar</button>
+        </div>
+        <div class="game-card">
+          <img src="https://i.ibb.co/TqV8dDg/slots.jpg" alt="Slots">
+          <h4>Slots 3x3</h4>
+          <button class="btn" onclick="abrirSlots()">Jogar</button>
+        </div>
+      </div>
+      <div id="janelaCassino" style="margin-top:1rem"></div>
+    </div>
+
+    <!-- DEPOSITAR -->
+    <div id="secDepositar" style="display:none">
+      <h3>Deposite via PIX</h3>
+      <p><strong>Chave PIX:</strong><br><span style="color:var(--green)">b8ab8c22-44b4-4528-a281-11a9b026a6be</span></p>
+      <input id="valorDep" type="number" placeholder="Valor (R$)" step="0.01">
+      <button class="btn" onclick="confirmarDeposito()">Confirmar depósito</button>
+    </div>
+  </section>
+</main>
+
+<!-- CARRINHO DE APOSTAS -->
+<div class="carrinho" id="carrinho">
+  <h4>Minhas Apostas</h4>
+  <div id="listaCarrinho"></div>
+  <button class="btn" style="width:100%;margin-top:.5rem" onclick="apostar()">Apostar</button>
+</div>
+
+<script>
+/* ========== DB LOCAL ========== */
+const DB_KEY='betking_users';
+let userAtual=null, carrinho=[];
+
+/* ---------- aux ---------- */
+const $=q=>document.querySelector(q);
+const mostrar=sec=>{
+  $('#secEsportes').style.display='none';
+  $('#secCassino').style.display='none';
+  $('#secDepositar').style.display='none';
+  $('#'+sec).style.display='block';
+}
+
+/* ---------- login / cadastro ---------- */
+(function(){
+  const u=prompt('Usuário (novo ou existente):');
+  const p=prompt('Senha:');
+  if(!u||!p)return location.reload();
+  let db=JSON.parse(localStorage.getItem(DB_KEY)||'{}');
+  if(!db[u])db[u]={pass:p,saldo:0};
+  if(db[u].pass!==p){alert('Senha errada');location.reload()}
+  userAtual=u;atualizaSaldo();
+})();
+
+function logout(){localStorage.removeItem('userAtual');location.reload()}
+function atualizaSaldo(){
+  const db=JSON.parse(localStorage.getItem(DB_KEY)||'{}');
+  $('#saldoUser').innerText=db[userAtual].saldo.toFixed(2);
+}
+
+/* ---------- esportes ---------- */
+const jogos=[
+  {id:1,time1:'Palmeiras',time2:'Flamengo',odds:[2.10,3.20,3.40]},
+  {id:2,time1:'Brasil',time2:'Argentina',odds:[1.95,3.30,3.80]},
+  {id:3,time1:'Celtics',time2:'Lakers',odds:[1.80,2.05]}
+];
+function geraJogos(){
+  const div=$('#jogos');div.innerHTML='';
+  jogos.forEach(j=>{
+    const el=document.createElement('div');el.className='jogo';
+    el.innerHTML=`
+      <div>${j.time1} x ${j.time2}</div>
+      <div class="odds">
+        <span onclick="addCarrinho('${j.id}','1',${j.odds[0]})">${j.odds[0]}</span>
+        <span onclick="addCarrinho('${j.id}','X',${j.odds[1]})">${j.odds[1]}</span>
+        <span onclick="addCarrinho('${j.id}','2',${j.odds[2]})">${j.odds[2]}</span>
+      </div>`;
+    div.appendChild(el);
+  });
+}
+function addCarrinho(id,esc,odd){
+  carrinho.push({id,esc,odd});renderCarrinho();
+}
+function renderCarrinho(){
+  const lc=$('#listaCarrinho');lc.innerHTML='';
+  carrinho.forEach((i,p)=>{
+    lc.innerHTML+=`<div class="item-carrinho">Jogo ${i.id} - ${i.esc} @${i.odd}<span style="cursor:pointer" onclick="carrinho.splice(${p},1);renderCarrinho()">❌</span></div>`;
+  });
+}
+function apostar(){
+  if(!carrinho.length)return alert('Carrinho vazio');
+  const db=JSON.parse(localStorage.getItem(DB_KEY)||'{}');
+  const aposta=1; //valor fixo 1 real
+  if(db[userAtual].saldo<aposta)return alert('Saldo insuficiente');
+  db[userAtual].saldo-=aposta;save(db);
+  alert('Aposta realizada! (simulação)');carrinho=[];renderCarrinho();atualizaSaldo();
+}
+
+/* ---------- cassino ---------- */
+function abrirRoleta(){
+  const j=$('#janelaCassino');j.innerHTML=`
+    <h4>Roleta Ao-Vivo</h4>
+    <div class="roulette"><div class="roulette-wheel"></div></div>
+    <button class="btn" onclick="girarRoleta()">Girar R$ 1</button>`;
+}
+function girarRoleta(){
+  const db=getDb();if(db.saldo<1)return alert('Sem saldo');
+  db.saldo-=1;save(db);
+  const win=Math.random()<0.48; //48 % de chance
+  if(win){db.saldo+=2;save(db);alert('Você ganhou R$ 2!');}else{alert('Perdeu...');}
+  atualizaSaldo();
+}
+function abrirCrash(){
+  const j=$('#janelaCassino');j.innerHTML=`
+    <div class="crash-box">
+      <h4>Crash</h4>
+      <div class="crash-multi" id="crashMulti">1.00x</div>
+      <button class="btn" onclick="iniciarCrash()">Iniciar R$ 1</button>
+    </div>`;
+}
+let crashInterval;
+function iniciarCrash(){
+  const db=getDb();if(db.saldo<1)return alert('Sem saldo');
+  db.saldo-=1;save(db);atualizaSaldo();
+  let m=1.00;$('#crashMulti').innerText=m.toFixed(2)+'x';
+  crashInterval=setInterval(()=>{
+    m+=(Math.random()*0.15);
+    $('#crashMulti').innerText=m.toFixed(2)+'x';
+    if(Math.random()<0.02){clearInterval(crashInterval);alert('Crash! Você perdeu.');}
+  },100);
+  setTimeout(()=>{
+    clearInterval(crashInterval);
+    const premio=m*1;
+    db.saldo+=premio;save(db);atualizaSaldo();
+    alert(`Você saiu em ${m.toFixed(2)}x – ganhou R$ ${premio.toFixed(2)}`);
+  },5000);
+}
+function abrirSlots(){
+  const j=$('#janelaCassino');j.innerHTML=`
+    <h4>Slots 3x3</h4>
+    <div id="slots" style="font-size:2rem;margin:1rem 0">🍎🍋🍒</div>
+    <button class="btn" onclick="girarSlots()">Girar R$ 1</button>`;
+}
+function girarSlots(){
+  const db=getDb();if(db.saldo<1)return alert('Sem saldo');
+  db.saldo-=1;save(db);atualizaSaldo();
+  const fr=['🍎','🍋','🍒','💎','7️⃣'];
+  let g='';
+  for(let i=0;i<9;i++)g+=fr[Math.floor(Math.random()*fr.length)];
+  $('#slots').innerText=g.match(/.{1,3}/g).join(' ');
+  const vence=g.split('7️⃣').length>2;
+  if(vence){db.saldo+=10;save(db);alert('Jackpot! +R$ 10');}else{alert('Nada...');}
+  atualizaSaldo();
+}
+
+/* ---------- depositar ---------- */
+function confirmarDeposito(){
+  const v=parseFloat($('#valorDep').value);
+  if(!v||v<=0)return alert('Valor inválido');
+  const db=getDb();db.saldo+=v;save(db);atualizaSaldo();
+  alert(`Depósito de R$ ${v.toFixed(2)} confirmado! (PIX simulado)`);
+}
+
+/* ---------- util db ---------- */
+function getDb(){return JSON.parse(localStorage.getItem(DB_KEY)||'{}')[userAtual]}
+function save(db){
+  const full=JSON.parse(localStorage.getItem(DB_KEY)||'{}');
+  full[userAtual]=db;localStorage.setItem(DB_KEY,JSON.stringify(full));
+}
+
+/* ---------- init ---------- */
+geraJogos();atualizaSaldo();
+</script>
+</body>
+</html>
